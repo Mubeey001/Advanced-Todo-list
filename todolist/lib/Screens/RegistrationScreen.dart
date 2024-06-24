@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:todolist/components/component.dart';
 
 class Register extends StatefulWidget {
@@ -9,11 +8,13 @@ class Register extends StatefulWidget {
   State<Register> createState() => _RegisterState();
 }
 
-final _formKey = GlobalKey<FormState>();
-final TextEditingController _useNameController = TextEditingController();
-bool _isOn = false;
-
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isOn = false;
+
   void _submit() {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
@@ -23,7 +24,11 @@ class _RegisterState extends State<Register> {
     Navigator.pushNamed(
       context,
       '/dashboard',
-      arguments: _useNameController.text,
+      arguments: {
+        'username': _usernameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      },
     );
   }
 
@@ -47,7 +52,7 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
-                    textEditingController: _useNameController,
+                    textEditingController: _usernameController,
                     labelText: 'Name',
                     hintText: 'Enter user name',
                     keyboardType: TextInputType.name,
@@ -63,17 +68,34 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
+                    textEditingController: _emailController,
                     labelText: 'Email',
                     hintText: 'Enter user email (optional)',
                     keyboardType: TextInputType.emailAddress,
+                    suffixIcon: const Icon(Icons.email),
+                    validator: (value) {
+                      if (value!.isEmpty ||
+                          !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+                              .hasMatch(value)) {
+                        return 'Invalid Email';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
+                    textEditingController: _passwordController,
                     labelText: 'Password',
-                    hintText: 'Create Password (optional)',
+                    hintText: 'Create Password',
                     keyboardType: TextInputType.visiblePassword,
                     isPassword: true,
                     suffixIcon: const Icon(Icons.remove_red_eye),
+                    validator: (value) {
+                      if (value!.isEmpty || value.length < 4) {
+                        return 'Password can\'t be null or less than 4 characters';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 30),
                   Row(

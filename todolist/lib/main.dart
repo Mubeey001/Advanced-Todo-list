@@ -17,7 +17,14 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const WelcomePage(),
         '/register': (context) => const Register(),
-        '/dashboard': (context) => DashBoard(username: ModalRoute.of(context)?.settings.arguments as String)
+        '/dashboard': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+          return DashBoard(
+            username: args['username']!,
+            email: args['email']!,
+            password: args['password']!,
+          );
+        },
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

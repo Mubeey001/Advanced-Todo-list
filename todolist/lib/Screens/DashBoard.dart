@@ -4,8 +4,14 @@ import 'package:todolist/Util/dialog_widget.dart';
 import 'package:todolist/components/component.dart';
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({super.key, required this.username});
+  const DashBoard(
+      {super.key,
+      required this.username,
+      required this.email,
+      required this.password});
   final String username;
+  final String email;
+  final String password;
 
   @override
   State<DashBoard> createState() => _DashBoardState();
