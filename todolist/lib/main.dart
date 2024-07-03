@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const WelcomePage(),
         '/register': (context) => const Register(),
         '/dashboard': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, String>;
+          final args =
+              ModalRoute.of(context)?.settings.arguments as Map<String, String>;
           return DashBoard(
             username: args['username']!,
             email: args['email']!,
