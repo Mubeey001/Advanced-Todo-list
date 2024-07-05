@@ -9,6 +9,7 @@ class DialogButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onPressed: onPressed,
       color: Theme.of(context).primaryColorDark,
       child: Text(
