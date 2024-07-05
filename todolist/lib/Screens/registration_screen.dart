@@ -1,39 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:todolist/components/component.dart';
+import 'package:get/get.dart';
+import 'package:todolist/Util/constants/images.dart';
+import 'package:todolist/Util/validator/validator.dart';
+import 'package:todolist/Util/widgets/build_divider_with_text.dart';
+import 'package:todolist/controller/register_controller.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+import '../Util/app_butttons/buttons_Widgets/switch_button.dart';
+import '../Util/app_butttons/app_button_widgets.dart';
+import '../Util/widgets/text_form_field_widget.dart';
 
-  @override
-  State<Register> createState() => _RegisterState();
-}
-
-class _RegisterState extends State<Register> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isOn = false;
-
-  void _submit() {
-    final isValid = _formKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    }
-    _formKey.currentState!.save();
-    Navigator.pushNamed(
-      context,
-      '/dashboard',
-      arguments: {
-        'username': _usernameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-      },
-    );
-  }
+class Register extends StatelessWidget {
+  const Register({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final RegisterController controller = Get.put(RegisterController());
+
     return Scaffold(
       body: ListView(
         children: [
@@ -41,7 +23,7 @@ class _RegisterState extends State<Register> {
             padding: const EdgeInsets.all(20.0),
             child: Form(
               autovalidateMode: AutovalidateMode.always,
-              key: _formKey,
+              key: controller.formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,50 +34,31 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
-                    textEditingController: _usernameController,
+                    textEditingController: controller.usernameController,
                     labelText: 'Name',
                     hintText: 'Enter user name',
                     keyboardType: TextInputType.name,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Username can\'t be empty';
-                      }
-                      if (value.length > 8) {
-                        return 'Username can\'t be greater than 8';
-                      }
-                      return null;
-                    },
+                    validator: (value) =>
+                        AppValidator.validateEmptyText('Name', value),
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
-                    textEditingController: _emailController,
+                    textEditingController: controller.emailController,
                     labelText: 'Email',
                     hintText: 'Enter user email (optional)',
                     keyboardType: TextInputType.emailAddress,
                     suffixIcon: const Icon(Icons.email),
-                    validator: (value) {
-                      if (value!.isEmpty ||
-                          !RegExp(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-                              .hasMatch(value)) {
-                        return 'Invalid Email';
-                      }
-                      return null;
-                    },
+                    validator: (value) => AppValidator.validEmail(value),
                   ),
                   const SizedBox(height: 30.0),
                   buildTextFormField(
-                    textEditingController: _passwordController,
+                    textEditingController: controller.passwordController,
                     labelText: 'Password',
                     hintText: 'Create Password',
                     keyboardType: TextInputType.visiblePassword,
                     isPassword: true,
                     suffixIcon: const Icon(Icons.remove_red_eye),
-                    validator: (value) {
-                      if (value!.isEmpty || value.length < 4) {
-                        return 'Password can\'t be null or less than 4 characters';
-                      }
-                      return null;
-                    },
+                    validator: (value) => AppValidator.validatePassword(value),
                   ),
                   const SizedBox(height: 30),
                   Row(
@@ -110,19 +73,22 @@ class _RegisterState extends State<Register> {
                         onPressed: () {},
                         child: const Text('Terms and Conditions'),
                       ),
-                      buildSwitch(
-                        value: _isOn,
-                        onChanged: (value) {
-                          setState(() {
-                            _isOn = value;
-                          });
-                        },
-                      ),
+                      Obx(() => buildSwitch(
+                            value: controller.isOn.value,
+                            onChanged: (value) {
+                              controller.isOn.value = value;
+                            },
+                          )),
                     ],
                   ),
                   const SizedBox(height: 30),
                   Center(
-                    child: buildButton(text: 'Sign Up', onPressed: _submit),
+                    child: buildButton(
+                      border: BorderSide.none,
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        text: 'Sign Up',
+                        onPressed: controller.submit),
                   ),
                   const SizedBox(
                       height: 20), // Space between button and divider
@@ -130,7 +96,13 @@ class _RegisterState extends State<Register> {
                   const SizedBox(
                       height: 20), // Space between divider and Google button
                   Center(
-                    child: buildGoogleButton(() {}),
+                    child: buildButton(
+                        border: const BorderSide(color: Colors.grey),
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blue,
+                        text: 'Google',
+                        onPressed: () {},
+                        imagePath: AppImages.googleLogo),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -141,7 +113,10 @@ class _RegisterState extends State<Register> {
                         style: TextStyle(color: Colors.grey),
                       ),
                       const SizedBox(width: 1),
-                      TextButton(onPressed: () {}, child: const Text('Login')),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('Login'),
+                      ),
                     ],
                   ),
                 ],

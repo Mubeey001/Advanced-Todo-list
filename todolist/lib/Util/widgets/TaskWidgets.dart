@@ -3,10 +3,12 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 Padding taskWidgets({
   required String taskName,
+  required String taskDescription,
   required bool taskCompleted,
   required Function(bool?)? onChanged,
   required Function(BuildContext)? onDelete,
-  required Function(BuildContext)? onEdit, // Add this parameter
+  required Function(BuildContext)?
+      onEdit, 
 }) {
   return Padding(
     padding: const EdgeInsets.only(top: 25, left: 20, right: 20),
@@ -19,7 +21,7 @@ Padding taskWidgets({
           borderRadius: BorderRadius.circular(8.0),
         ),
         SlidableAction(
-          onPressed: onEdit, // Handle edit button press
+          onPressed: onEdit, 
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -33,7 +35,19 @@ Padding taskWidgets({
         ),
         child: ListTile(
           leading: Checkbox(value: taskCompleted, onChanged: onChanged),
-          title: Text(taskName),
+          subtitle: Text(
+            taskDescription,
+            style: TextStyle(color: Colors.grey[600]),
+            maxLines: 1, 
+            overflow: TextOverflow.ellipsis, 
+          ),
+          title: Text(
+            taskName,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
         ),
       ),
     ),

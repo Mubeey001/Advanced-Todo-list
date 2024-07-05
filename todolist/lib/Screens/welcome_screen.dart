@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:todolist/Util/constants/images.dart';
+import 'package:todolist/Util/app_butttons/app_button_widgets.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -10,7 +13,7 @@ class WelcomePage extends StatelessWidget {
       body: Column(
         children: [
           Image.asset(
-            "assets/wlcm.png",
+            AppImages.welcomeLogo,
             height: 300,
           ),
           const SizedBox(height: 30),
@@ -37,22 +40,14 @@ class WelcomePage extends StatelessWidget {
           const SizedBox(height: 15),
           const Text('Manage all your projects and tasks in one place.'),
           const SizedBox(height: 100),
-          SizedBox(
-            width: 250,
-            child: OutlinedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide.none, // Removes the border
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-              ),
-              child: const Text(
-                'Get started',
-                style: TextStyle(fontSize: 18.0),
-              ),
-            ),
+          buildButton(
+            border: BorderSide.none,
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            text: "Get Started",
+            onPressed: () {
+              Get.toNamed('/register');
+            },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
